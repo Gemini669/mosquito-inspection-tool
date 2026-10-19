@@ -1,0 +1,5 @@
+README.md
+src/data/library.json
+node_modules/
+dist/
+test-results/

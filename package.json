@@ -1,0 +1,29 @@
+{
+  "name": "mosquito-inspection-tool",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "data:import": "python3 scripts/import_excel.py",
+    "data:check": "python3 scripts/import_excel.py --check",
+    "build": "npm run data:check && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "npm run data:check && node --test tests/*.test.js",
+    "test:e2e": "playwright test",
+    "check": "npm run format:check && npm test && npm run build && npm run test:e2e",
+    "format": "prettier --write index.html \"src/*.js\" src/styles.css \"tests/**/*.js\" playwright.config.js .github/workflows/ci.yml USAGE.md \"docs/*.md\"",
+    "format:check": "prettier --check index.html \"src/*.js\" src/styles.css \"tests/**/*.js\" playwright.config.js .github/workflows/ci.yml USAGE.md \"docs/*.md\""
+  },
+  "dependencies": {
+    "docx": "9.12.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "prettier": "3.9.10",
+    "vite": "8.3.4"
+  }
+}

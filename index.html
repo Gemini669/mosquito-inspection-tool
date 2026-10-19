@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1768ac" />
+    <meta
+      name="description"
+      content="登革热与基孔肯雅热督导问题及整改建议自动生成系统，使用原始问题库，本地生成督导报告。"
+    />
+    <title>登革热与基孔肯雅热督导问题及整改建议自动生成系统 V1.0</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231768ac'/%3E%3Cpath d='M17 9h6v8h8v6h-8v8h-6v-8H9v-6h8z' fill='white'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳至主要内容</a>
+    <header class="site-header">
+      <div class="brand-icon" aria-hidden="true">✚</div>
+      <div class="brand">
+        <p class="eyebrow">媒介传染病防控 · 现场督导工作台</p>
+        <h1>登革热与基孔肯雅热督导问题及整改建议自动生成系统 <span>V1.0</span></h1>
+      </div>
+      <span class="local-badge"><i></i>现场记录仅存本机</span>
+    </header>
+    <main id="main" class="shell">
+      <div class="intro">
+        <div>
+          <p class="eyebrow">INSPECTION WORKSPACE</p>
+          <h2>让每一项发现，都有据可循</h2>
+          <p>选择现场问题，记录具体点位，一键整理督导报告。</p>
+        </div>
+        <div class="source-badge">
+          <strong id="library-count">138</strong><span>条原始问题 · 确定性匹配</span>
+        </div>
+      </div>
+      <nav class="steps" aria-label="工作流程">
+        <a href="#inspection"><b>01</b> 填写督导信息</a
+        ><a href="#library"><b>02</b> 勾选并记录问题</a
+        ><button id="step-preview" type="button"><b>03</b> 生成与导出报告</button>
+      </nav>
+      <section id="inspection" class="panel info-panel" aria-labelledby="inspection-title">
+        <div class="panel-heading">
+          <h2 id="inspection-title"><span class="section-number">01</span> 督导信息</h2>
+          <span class="muted">带 * 为生成报告必填项</span>
+        </div>
+        <div class="info-grid">
+          <label
+            >督导地点 <span class="required">*</span
+            ><input
+              id="location"
+              autocomplete="off"
+              placeholder="例如：某街道、社区或单位"
+              required
+          /></label>
+          <label
+            >督导日期 <span class="required">*</span><input id="date" type="date" required
+          /></label>
+          <label class="wide"
+            >现场总体补充描述 <span class="optional">选填</span
+            ><textarea
+              id="description"
+              rows="2"
+              placeholder="记录督导范围、现场总体情况等；具体问题请在现场记录区逐条补充。"
+            ></textarea>
+          </label>
+        </div>
+      </section>
+      <div class="workspace">
+        <section id="library" class="panel library-panel" aria-labelledby="library-title">
+          <div class="panel-heading">
+            <h2 id="library-title"><span class="section-number">02</span> 问题库</h2>
+            <span id="result-count" class="count-pill"></span>
+          </div>
+          <div class="filters">
+            <label class="search-label"
+              ><span class="sr-only">关键词搜索</span
+              ><span class="search-icon" aria-hidden="true">⌕</span
+              ><input id="keyword" type="search" placeholder="搜索编号、问题、后果或建议…"
+            /></label>
+            <div class="filter-row">
+              <label
+                ><span class="sr-only">工作领域</span
+                ><select id="domain" aria-label="工作领域">
+                  <option value="">全部工作领域</option>
+                </select></label
+              ><label
+                ><span class="sr-only">后果类别</span
+                ><select id="category" aria-label="后果类别">
+                  <option value="">全部后果类别</option>
+                </select></label
+              ><button id="reset-filters" class="text-button" type="button">重置</button>
+            </div>
+            <div class="list-tools">
+              <span class="muted">勾选问题后，在现场记录区填写详情</span
+              ><button id="select-visible" class="text-button" type="button">勾选当前结果</button>
+            </div>
+          </div>
+          <div id="problem-list" class="problem-list"></div>
+        </section>
+        <aside class="panel records-panel" aria-labelledby="records-title">
+          <div class="panel-heading">
+            <h2 id="records-title">
+              现场记录 <span id="selected-count" class="count-pill">0</span>
+            </h2>
+            <button id="clear-records" class="text-button danger" type="button">清空</button>
+          </div>
+          <p class="records-tip">
+            每条记录对应一个具体点位。同一问题可增加多个点位，报告逐条保留。
+          </p>
+          <div id="observations"></div>
+          <div class="draft-tools">
+            <span id="draft-status" role="status">尚未保存草稿</span
+            ><button id="save-draft" class="text-button" type="button">保存草稿</button
+            ><button id="download-draft" class="text-button" type="button">备份草稿</button
+            ><label class="text-button import-label"
+              >导入草稿<input
+                id="import-draft"
+                type="file"
+                accept=".json,application/json"
+                class="sr-only" /></label
+            ><button id="new-draft" class="text-button danger" type="button">新建督导</button>
+          </div>
+          <div class="report-actions">
+            <button id="preview" type="button" class="button primary">
+              生成报告 / 预览 <span aria-hidden="true">↗</span>
+            </button>
+            <p>后果同类归组 · 问题与整改建议逐条保留</p>
+          </div>
+        </aside>
+      </div>
+      <footer class="site-footer">
+        <p>数据来源：<span id="source-name"></span> · 问题建议库</p>
+        <p><span id="source-stats"></span> · 无需付费 API · 无现场数据上传</p>
+        <details>
+          <summary>数据版本与使用说明</summary>
+          <p id="source-hash"></p>
+          <p>
+            关键词采用包含匹配，多个词以空格分隔时须同时满足。筛选不会移除已选记录。不同的后果原文不会被删减或改写，报告请经督导人员复核后使用。
+          </p>
+          <p>
+            草稿保存在当前浏览器、当前网站的本地存储中；换浏览器、清理数据或隐私模式可能导致草稿丢失，请及时备份。共享设备使用完毕可“新建督导”清除本地草稿。
+          </p>
+        </details>
+      </footer>
+    </main>
+    <div id="notice" role="status" class="notice" hidden></div>
+    <dialog id="report-dialog" aria-labelledby="report-dialog-title">
+      <div class="dialog-toolbar">
+        <div>
+          <h2 id="report-dialog-title">报告预览</h2>
+          <p id="report-status" class="muted" role="status">请核对点位及现场描述后使用</p>
+        </div>
+        <div class="dialog-buttons">
+          <button id="copy-report" class="button secondary" type="button">复制文字</button
+          ><button id="export-word" class="button primary" type="button">导出 Word</button
+          ><button id="close-dialog" class="button secondary" type="button">返回编辑</button>
+        </div>
+      </div>
+      <div id="copy-fallback" hidden>
+        <label
+          >自动复制不可用，请全选以下文字后复制<textarea
+            id="copy-text"
+            readonly
+            rows="6"
+          ></textarea>
+        </label>
+      </div>
+      <article id="report-content" class="report-paper"></article>
+    </dialog>
+    <noscript>本应用需要启用 JavaScript。现场数据只在浏览器内处理。</noscript>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
