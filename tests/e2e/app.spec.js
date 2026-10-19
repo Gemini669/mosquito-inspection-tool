@@ -11,7 +11,7 @@ async function select(page, id) {
     .check();
 }
 async function basic(page) {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByLabel('督导地点', { exact: false }).fill('测试街道社区');
   await page.getByLabel('督导日期', { exact: false }).fill('2026-10-19');
 }
@@ -98,7 +98,7 @@ test('search, filters, multi-point records, restoration, report, copy and real W
 test('required fields, safe user text, responsive layout and keyboard dialog close', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByRole('button', { name: '生成报告 / 预览', exact: false }).click();
   await expect(page.locator('#notice')).toContainText('督导地点');
   await page.getByLabel('督导地点', { exact: false }).fill('<img src=x onerror=alert(1)>');
