@@ -17,6 +17,8 @@ npm run dev
 
 浏览器打开终端显示的开发服务地址。Windows 可以使用 PowerShell；若 Python 命令为 `python`，请将本机可用的 Python 3 配置为 `python3`，或使用 WSL 运行项目命令。MacBook、Windows 及手机请使用当前版本的 Safari、Chrome、Edge 或 Firefox。手机测试时让电脑与手机处于同一可信局域网，通过电脑的局域网地址访问开发服务。请勿将开发服务暴露到公网。
 
+局域网 HTTP 访问也支持问题勾选、多点位记录和本地草稿；自动复制受浏览器安全策略限制时，可使用页面提供的手动复制功能。
+
 生产构建与本地检查：
 
 ```bash
@@ -112,9 +114,12 @@ npm run check        # 依次运行上述三项检查
 
 浏览器自动化使用 **Chromium**；手机采用 iPhone 13 尺寸和触屏仿真，不代表已在真实 iPhone、macOS Safari 或原生 Microsoft Word/WPS 中逐一验收。
 
+记录编号的兼容性测试会模拟缺少 `crypto.randomUUID` 的浏览器环境，验证勾选、批量添加、多点位、草稿恢复和报告生成，并校验备用编号的 UUID 格式与独立性。
+
 ## 代码位置
 
 - `src/core.js`：搜索、草稿校验、后果归组和报告生成的纯函数。
+- `src/observation-id.js`：兼容 HTTPS 与局域网 HTTP 的本地现场记录编号。
 - `src/main.js`、`src/styles.css`、`index.html`：网页交互与响应式样式。
 - `src/word.js`：按报告段落生成 `.docx`，导出时才加载以减小首屏资源。
 - `tests/core.test.js`：数据、业务及 Word 文件解包校验。
