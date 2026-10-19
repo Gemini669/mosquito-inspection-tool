@@ -26,6 +26,25 @@ npm run preview
 
 `dist/` 可部署到静态网站托管服务。**不要双击 HTML 以 `file://` 方式打开**；需通过 HTTP/HTTPS 服务访问。生产环境建议 HTTPS，以支持浏览器原生复制和安全上下文功能。应用会在自动复制不可用时提供可手动复制的文字。
 
+## GitHub Pages 部署与更新
+
+目标网址：**https://gemini669.github.io/mosquito-inspection-tool/**。
+
+`vite.config.js` 将 `base` 固定为 `/mosquito-inspection-tool/`。开发服务和生产预览也使用该子路径，请访问终端显示的完整地址；构建后的 JS、CSS 和按需加载的 Word 导出模块均使用此路径。若将来修改仓库名或改用独立域名，需重新核对 `base` 和浏览器测试入口。
+
+首次启用时由仓库管理员操作：
+
+1. 在 GitHub 仓库 **Settings → Pages → Build and deployment** 中确认 **Source = GitHub Actions**。本次配置时已核实该仓库采用此模式，无需选择 `gh-pages` 分支。
+2. 审核并合并部署配置 PR 到 `main`。PR 分支不会自动发布；本项目不会自动合并 PR。
+3. 在 **Actions → Deploy to GitHub Pages** 查看构建及部署结果。如果 `github-pages` 环境设置了审批，按仓库规则批准部署。
+4. 等待部署任务成功，再访问目标网址，检查页面、问题搜索和 Word 导出。构建成功与线上部署成功是两个不同结果。
+
+自动发布流程位于 `.github/workflows/deploy.yml`：每次 `main` 更新时，使用 Node.js 24 和 Python 3.12，执行 `npm ci`、`npm run build`（包括 Excel 数据一致性校验），然后使用官方 `configure-pages`、`upload-pages-artifact` 和 `deploy-pages` Actions 发布 `dist/`。工作流使用 `contents: read`、`pages: write`、`id-token: write` 权限及 `github-pages` 部署环境，不需要个人访问令牌、API Key、数据库或付费服务。原有 `.github/workflows/ci.yml` 继续独立运行完整测试。
+
+日常更新：从新分支提交改动，等待原有 CI 检查通过，再人工审核合并到 `main`，部署工作流会自动发布新版本。若需要重新发布当前版本，在 **Actions → Deploy to GitHub Pages → Run workflow** 中选择 **main** 手动运行；工作流仅允许从 `main` 构建并部署。若仓库设置了分支保护，请将原有 CI 的 `test` 检查设为合并要求；部署工作流自身仅执行构建和发布，不代替测试。
+
+Pages 只托管静态程序和问题库。现场记录仍仅保存在浏览器本地，不会因部署增加上传接口。开发地址中的草稿不会自动迁移至 Pages 网址，切换前请先备份 JSON，再在目标网址导入。
+
 ## 现场工作流程
 
 1. 填写督导地点、日期；可选填现场总体补充描述。

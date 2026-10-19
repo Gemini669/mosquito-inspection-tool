@@ -10,7 +10,7 @@ export default defineConfig({
   workers: 2,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: 'http://127.0.0.1:4173/mosquito-inspection-tool/',
     locale: 'zh-CN',
     launchOptions: { executablePath },
     trace: 'retain-on-failure',
@@ -24,7 +24,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run preview -- --port 4173 --strictPort',
-    url: 'http://127.0.0.1:4173',
+    url: 'http://127.0.0.1:4173/mosquito-inspection-tool/',
     reuseExistingServer: !process.env.CI,
   },
 });
