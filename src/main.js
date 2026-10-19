@@ -1,4 +1,5 @@
 import library from './data/library.json';
+import { createObservationKey } from './observation-id.js';
 import {
   DRAFT_KEY,
   normalizeLibrary,
@@ -115,7 +116,7 @@ function renderObservations() {
     : '<div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h3>开始记录现场发现</h3><p>从问题库勾选问题，<br />在这里填写具体点位与现场描述。</p></div>';
 }
 function addObservation(problemId) {
-  draft.observations.push({ key: crypto.randomUUID(), problemId, point: '', description: '' });
+  draft.observations.push({ key: createObservationKey(), problemId, point: '', description: '' });
 }
 function renderAll() {
   syncMetadata();

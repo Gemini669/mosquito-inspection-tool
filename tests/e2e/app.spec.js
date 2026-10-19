@@ -217,3 +217,41 @@ test('storage failure is shown and a backup still contains unsaved site records'
   await download.saveAs(file);
   expect(JSON.parse(readFileSync(file, 'utf8')).observations[0].point).toBe('存储失败仍可备份');
 });
+
+test('record UUID fallback supports selection, batch adding, multiple points and draft restore', async ({
+  page,
+}) => {
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.addInitScript(() => {
+    Object.defineProperty(globalThis.crypto, 'randomUUID', {
+      value: undefined,
+      configurable: true,
+    });
+  });
+  await basic(page);
+  expect(await page.evaluate(() => typeof crypto.randomUUID)).toBe('undefined');
+  await select(page, 'M001');
+  await expect(page.locator('#selected-count')).toHaveText('1');
+  await page.locator('.observation [data-field=point]').fill('宿舍一楼');
+  await page.getByRole('button', { name: '同一问题增加点位', exact: false }).click();
+  await page.locator('.observation [data-field=point]').nth(1).fill('宿舍二楼');
+  await page.getByRole('searchbox').fill('M002');
+  await page.getByRole('button', { name: '勾选当前结果', exact: true }).click();
+  await page.locator('.observation [data-field=point]').nth(2).fill('食堂储水区');
+  await expect(page.locator('#selected-count')).toHaveText('3');
+  const keys = await page
+    .locator('.observation')
+    .evaluateAll((entries) => entries.map((entry) => entry.dataset.key));
+  expect(new Set(keys).size).toBe(3);
+  for (const key of keys)
+    expect(key).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  await page.reload();
+  await expect(page.locator('#selected-count')).toHaveText('3');
+  await expect(page.locator('.observation [data-field=point]').nth(1)).toHaveValue('宿舍二楼');
+  await page.getByRole('button', { name: '生成报告 / 预览', exact: false }).click();
+  for (const point of ['宿舍一楼', '宿舍二楼', '食堂储水区']) {
+    await expect(page.locator('#report-content')).toContainText(point);
+  }
+  expect(errors).toEqual([]);
+});
